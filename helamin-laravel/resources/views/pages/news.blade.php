@@ -1,13 +1,14 @@
-@extends('layouts.helamin-original')
+@extends('layouts.app')
 
-@section('title', 'Новости - HELAMIN')
+@section('title', 'Новости — Helamin')
 
 @section('content')
-<h1>Новости</h1>
-
-<div class="content-area">
-    <div class="content-text">
-        <p>Раздел новостей находится в разработке.</p>
+<section class="main-content">
+    <div class="container">
+        <article class="content-area">
+            <h1 class="content-area__title">Новости</h1>
+            <p>Страница в разработке.</p>
+        </article>
     </div>
-</div>
+</section>
 @endsection

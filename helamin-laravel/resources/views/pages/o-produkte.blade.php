@@ -1,26 +1,24 @@
-@extends('layouts.helamin-original')
+@extends('layouts.app')
 
-@section('title', 'О продукте - HELAMIN')
+@section('title', 'О продукте — Helamin')
 
 @section('content')
-<h1>О продукте HELAMIN®</h1>
+<section class="main-content">
+    <div class="container main-content__inner">
+        <aside class="sidebar">
+            <ul class="sidebar__menu">
+                <li><a href="{{ url('/o-produkte/opisanie') }}" class="sidebar__link">Описание</a></li>
+                <li><a href="{{ url('/o-produkte/normativnaya-dokumentatsiya') }}" class="sidebar__link">Нормативная документация</a></li>
+                <li><a href="{{ url('/o-produkte/nauchnye-stati') }}" class="sidebar__link">Научные статьи</a></li>
+                <li><a href="{{ url('/o-produkte/praktika-primeneniya-otzyvy') }}" class="sidebar__link">Практика применения / Отзывы</a></li>
+                <li><a href="{{ url('/o-produkte/voprosy-i-otvety') }}" class="sidebar__link">Вопросы и ответы</a></li>
+            </ul>
+        </aside>
 
-<div class="content-area">
-    <div class="content-text">
-        <h2 id="opisanie">Описание</h2>
-        <p>HELAMIN® — инновационная технология водоподготовки, не содержащая гидразина и фосфатов.</p>
-        
-        <h2 id="dokumentatsiya">Нормативная документация</h2>
-        <p>Продукция сертифицирована и соответствует международным стандартам качества.</p>
-        
-        <h2 id="stati">Научные статьи</h2>
-        <p>Публикации о технологии HELAMIN® в специализированных изданиях.</p>
-        
-        <h2 id="otzyvy">Практика применения/Отзывы</h2>
-        <p>Опыт применения продукции на промышленных предприятиях.</p>
-        
-        <h2 id="voprosy">Вопросы и ответы</h2>
-        <p>Ответы на часто задаваемые вопросы о продукции HELAMIN®.</p>
+        <article class="content-area">
+            <h1 class="content-area__title">О продукте</h1>
+            <p>Страница в разработке.</p>
+        </article>
     </div>
-</div>
+</section>
 @endsection
