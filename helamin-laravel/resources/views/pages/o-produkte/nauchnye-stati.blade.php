@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'О продукте — Helamin')
+@section('title', 'Научные статьи — Helamin')
 
 @section('content')
 <section class="main-content">
@@ -16,7 +16,7 @@
         </aside>
 
         <article class="content-area">
-            <h1 class="content-area__title">О продукте</h1>
+            <h1 class="content-area__title">Научные статьи</h1>
             <p>Страница в разработке.</p>
         </article>
     </div>

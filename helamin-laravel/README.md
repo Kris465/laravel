@@ -1,58 +1,156 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Helamin — Восстановление сайта
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Задача
+Восстановить сайт компании Helamin после JS-инъекции. Сайт скачан из веб-архива.
+Цель — не воссоздать дизайн точь-в-точь, а **сохранить информацию** и сделать:
+- адаптивную верстку (mobile-first)
+- современный, чистый интерфейс
+- защиту от будущих инъекций (чистый код, без внешних скриптов)
 
-## About Laravel
+## Стек
+- **Backend:** Laravel 13 + PHP
+- **Frontend:** Blade-шаблоны, чистый CSS (без фреймворков), минимум JS
+- **Шрифт:** Roboto (Google Fonts)
+- **Адаптивность:** mobile-first, чистый CSS Grid / Flexbox
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Структура страниц и URL
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+| # | Страница | URL | Статус |
+|---|----------|-----|--------|
+| 1 | **Главная** | `/` | ✅ Готова |
+| 2 | **О продукте** | `/o-produkte` | ⬜ |
+| 2.1 | — Описание | `/o-produkte/opisanie` | ⬜ |
+| 2.2 | — Нормативная документация | `/o-produkte/normativnaya-dokumentatsiya` | ⬜ |
+| 2.3 | — Научные статьи | `/o-produkte/nauchnye-stati` | ⬜ |
+| 2.4 | — Практика применения / Отзывы | `/o-produkte/praktika-primeneniya-otzyvy` | ⬜ |
+| 2.5 | — Вопросы и ответы | `/o-produkte/voprosy-i-otvety` | ⬜ |
+| 3 | **Области применения** | `/oblast-primeneniya` | ⬜ |
+| 3.1 | — Котлы низкого и среднего давления | `/oblast-primeneniya/kotly-nizkogo-i-srednego-davleniya` | ⬜ |
+| 3.2 | — Котлы высокого и сверхвысокого давления | `/oblast-primeneniya/kotly-vysokogo-i-sverkhvysokogo-davleniya` | ⬜ |
+| 3.3 | — Котлы-утилизаторы | `/oblast-primeneniya/kotly-utilizatory` | ⬜ |
+| 3.4 | — ПГУ | `/oblast-primeneniya/pgu` | ⬜ |
+| 3.5 | — Предпусковая отмывка и консервация | `/oblast-primeneniya/predpuskovaya-otmyvka-i-konservatsiya` | ⬜ |
+| 3.6 | — Системы теплофикации | `/oblast-primeneniya/sistemy-teplofikatsii` | ⬜ |
+| 3.7 | — Системы горячего водоснабжения | `/oblast-primeneniya/sistemy-goryachego-vodosnabzheniya` | ⬜ |
+| 4 | **Отрасли промышленности** | `/otrasli-promyshlennosti` | ⬜ |
+| 4.1 | — Азотная промышленность | `/otrasli-promyshlennosti/azotnaya-promyshlennost-i-proizvodstvo-udobreniy` | ⬜ |
+| 4.2 | — Металлургия | `/otrasli-promyshlennosti/chernaya-i-tsvetnaya-metallurgiya` | ⬜ |
+| 4.3 | — Нефтехимия | `/otrasli-promyshlennosti/neftekhimicheskaya-promyshlennost` | ⬜ |
+| 4.4 | — Нефтепереработка | `/otrasli-promyshlennosti/neftepererabatyvayushchaya-promyshlennost` | ⬜ |
+| 4.5 | — Пищевая промышленность / ЖКХ | `/otrasli-promyshlennosti/pishchevaya-promyshlennost-zhkkh-munitsipalnye-obrazovaniya` | ⬜ |
+| 4.6 | — Тепло- и электроэнергетика | `/otrasli-promyshlennosti/teplo-i-elektroenergetika` | ⬜ |
+| 4.7 | — Целлюлозно-бумажная | `/otrasli-promyshlennosti/tsellyulozno-bumazhnaya-promyshlennost` | ⬜ |
+| 4.8 | — Другие виды | `/otrasli-promyshlennosti/drugie-vidy-promyshlennosti` | ⬜ |
+| 5 | **Новости** | `/news` | ⬜ |
+| 6 | **Библиотека** | `/biblioteka` | ⬜ |
+| 7 | **Опросный лист** | `/oprosnyy-list` | ⬜ |
+| 8 | **Референции** | `/referentsii` | ⬜ |
+| 9 | **Контакты** | `/contacts` | ⬜ |
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Структура файлов
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+helamin-laravel/
+├── public/
+│   ├── css/app.css           # Основные стили (все стили сайта)
+│   ├── js/app.js             # Минимум JS (бургер-меню)
+│   └── images/               # Картинки: логотипы, фото, иконки
+│       ├── package-main.png
+│       └── package-close.png
+├── resources/views/
+│   ├── layouts/
+│   │   └── app.blade.php     # Основной layout (nav + footer)
+│   └── pages/
+│       ├── home.blade.php                # Главная ✅
+│       ├── o-produkte.blade.php          # О продукте
+│       ├── o-produkte/
+│       │   ├── opisanie.blade.php
+│       │   ├── normativnaya-dokumentatsiya.blade.php
+│       │   ├── nauchnye-stati.blade.php
+│       │   ├── praktika-primeneniya-otzyvy.blade.php
+│       │   └── voprosy-i-otvety.blade.php
+│       ├── oblast-primeneniya.blade.php
+│       ├── oblast-primeneniya/            # подстраницы...
+│       ├── otrasli-promyshlennosti.blade.php
+│       ├── otrasli-promyshlennosti/      # подстраницы...
+│       ├── news.blade.php
+│       ├── biblioteka.blade.php
+│       ├── referentsii.blade.php
+│       └── contacts.blade.php
+├── routes/
+│   └── web.php               # Все маршруты (именованные)
+└── README.md                 # Этот файл
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Дизайн-принципы
+- **Минимум зависимостей** — никаких jQuery, Bootstrap, внешних JS
+- **Безопасность** — весь вывод через `{{ }}` (экранирование), CSP-заголовки
+- **Скорость** — минимум запросов, ленивая загрузка изображений
+- **Доступность** — семантический HTML, aria-labels, контрастность
 
-## Contributing
+## Цветовая палитра
+| Переменная | Значение | Назначение |
+|------------|----------|------------|
+| `--c-primary` | `#0055a4` | Основной синий (nav, акценты) |
+| `--c-primary-dark` | `#003d75` | Тёмно-синий (hero фон) |
+| `--c-primary-light` | `#e6f0fa` | Светло-синий (sidebar, hover) |
+| `--c-accent` | `#e87722` | Оранжевый (CTA кнопки) |
+| `--c-text` | `#1a1a2e` | Основной текст |
+| `--c-text-muted` | `#5a5a72` | Приглушённый текст |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Как создать новую страницу
 
-## Code of Conduct
+1. Создай blade-файл в `resources/views/pages/` (или подпапке)
+2. Добавь маршрут в `routes/web.php` с `->name('...')`
+3. Шаблон страницы:
+```blade
+@extends('layouts.app')
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+@section('title', 'Заголовок страницы')
 
-## Security Vulnerabilities
+@section('content')
+  <section class="main-content">
+      <div class="container">
+          <h1>Заголовок</h1>
+          <p>Контент...</p>
+      </div>
+  </section>
+@endsection
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Куда класть файлы
 
-## License
+| Тип файла | Путь |
+|-----------|------|
+| **Картинки** | `public/images/` |
+| **CSS** | `public/css/app.css` (один файл на весь сайт) |
+| **JS** | `public/js/app.js` |
+| **Blade-шаблоны** | `resources/views/pages/` |
+| **Стили страниц** | Дописывать в конец `public/css/app.css` |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## План работ
+
+### Этап 1 — Главная страница ✅
+- [x] Базовый layout с навигацией и footer
+- [x] Hero-блок с 3-колоночной сеткой
+- [x] Контентная область с сайдбаром
+- [x] Адаптивная навигация (sticky)
+- [x] Цветовая палитра и типографика
+
+### Этап 2 — Контентные страницы
+- [ ] О  produkte + подстраницы (5 страниц)
+- [ ] Области применения + подстраницы (7 страниц)
+- [ ] Отрасли промышленности + подстраницы (8 страниц)
+
+### Этап 3 — Остальные страницы
+- [ ] Новости
+- [ ] Библиотека
+- [ ] Опросный лист
+- [ ] Референции
+- [ ] Контакты
+
+### Этап 4 — Финализация
+- [ ] Перенести контент из оригинального сайта
+- [ ] Проверка адаптивности на всех страницах
+- [ ] Базовая SEO-разметка (title, meta description)
+- [ ] Защита: CSP-заголовки, экранирование вывода
