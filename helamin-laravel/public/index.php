@@ -5,8 +5,8 @@ use Illuminate\Http\Request;
 
 define('LARAVEL_START', microtime(true));
 
-// Базовая директория Laravel (temp-laravel внутри корня сайта)
-$basePath = dirname(__DIR__, 2) . '/temp-laravel';
+// Базовая директория Laravel
+$basePath = '/home/helamin/helamin.ru/laravel';
 
 // Determine if the application is in maintenance mode...
 if (file_exists($maintenance = $basePath . '/storage/framework/maintenance.php')) {
