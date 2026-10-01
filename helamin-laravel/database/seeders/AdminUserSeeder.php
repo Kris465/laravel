@@ -14,13 +14,13 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-        // Get admin credentials from .env ONLY
+                // Get admin credentials from .env ONLY
         // NEVER commit real credentials to version control!
-        $email = env('ADMIN_EMAIL');
-        $ [REDACTED]= env('ADMIN_PASSWORD');
+        $adminEmail = env('ADMIN_EMAIL');
+        $adminPassword = env('ADMIN_PASSWORD');
 
         // Ensure credentials are set
-        if (!$email || !$password) {
+        if (!$adminEmail || !$adminPassword) {
             throw new \InvalidArgumentException(
                 'ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env'
             );
@@ -28,11 +28,11 @@ class AdminUserSeeder extends Seeder
 
         // Use firstOrCreate to avoid duplicate entries on re-seed
         User::firstOrCreate(
-            ['email' => $email],
+            ['email' => $adminEmail],
             [
                 'name' => 'Helamin Admin',
-                'email' => $email,
-                'password' => Hash::make($password),
+                'email' => $adminEmail,
+                'password' => Hash::make($adminPassword),
                 'is_admin' => true,
                 'email_verified_at' => now(),
             ]

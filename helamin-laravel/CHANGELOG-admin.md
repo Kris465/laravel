@@ -39,8 +39,9 @@
   - `is_active` (активность страницы)
 
 ### Сидеры
-- `AdminUserSeeder` — создаёт администратора (email: `helamin.admin@technology-holding.internal`, пароль: `%f9j6mJ2F20b03b`)
-  - Учётные данные задаются через `.env` (`ADMIN_EMAIL`, `ADMIN_PASSWORD`) с fallback
+- `AdminUserSeeder` — создаёт администратора
+  - Учётные данные задаются строго через `.env` (`ADMIN_EMAIL`, `ADMIN_PASSWORD`)
+  - Если переменные не заданы — выбрасывается исключение
 - `PageSeeder` — заполняет таблицу pages базовым контентом
 
 ### Middleware
