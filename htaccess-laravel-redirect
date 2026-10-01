@@ -1,0 +1,5 @@
+RewriteEngine On
+
+# Перенаправляем все запросы на Laravel в temp-laravel/public
+RewriteCond %{REQUEST_URI} !^/temp-laravel/public/
+RewriteRule ^(.*)$ /temp-laravel/public/$1 [L]
