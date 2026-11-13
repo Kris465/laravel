@@ -130,6 +130,32 @@ class PageTest extends TestCase
             ->assertSee('alt="Фото котла"', false);
     }
 
+    public function test_background_from_admin_is_applied(): void
+    {
+        Page::query()->where('slug', '/')->update(['background' => 'backgrounds/water tile.jpg']);
+
+        $this->get('/news')
+            ->assertOk()
+            ->assertSee('has-site-background', false)
+            ->assertSee('/storage/backgrounds/water%20tile.jpg', false);
+    }
+
+    public function test_background_is_not_applied_when_not_set(): void
+    {
+        $this->get('/news')->assertOk()->assertDontSee('has-site-background', false);
+    }
+
+    public function test_background_field_is_available_on_home_page(): void
+    {
+        $user = User::factory()->create(['is_admin' => true]);
+        $home = Page::query()->where('slug', '/')->firstOrFail();
+
+        $this->actingAs($user, 'web')
+            ->get('/admin/pages/'.$home->id.'/edit')
+            ->assertOk()
+            ->assertSee('Фон сайта', false);
+    }
+
     public function test_content_form_renders_in_admin(): void
     {
         $user = User::factory()->create(['is_admin' => true]);
@@ -138,7 +164,8 @@ class PageTest extends TestCase
         $this->actingAs($user, 'web')
             ->get('/admin/pages/'.$page->id.'/edit')
             ->assertOk()
-            ->assertSee('Текст страницы', false);
+            ->assertSee('Текст страницы', false)
+            ->assertDontSee('Фон сайта', false);
     }
 
     public function test_managers_cannot_create_pages(): void

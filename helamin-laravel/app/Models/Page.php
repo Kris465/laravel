@@ -17,6 +17,7 @@ class Page extends Model
         'is_active',
         'images',
         'documents',
+        'background',
     ];
 
     protected $casts = [

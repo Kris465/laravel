@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="{{ asset('css/media.css') }}">
     @stack('styles')
 </head>
-<body>
+<body @class(['has-site-background' => filled($siteBackgroundUrl ?? null)]) @if(filled($siteBackgroundUrl ?? null)) style="--site-bg: url('{{ $siteBackgroundUrl }}');" @endif>
 
     {{-- Глобальная навигация --}}
     <nav class="main-nav">

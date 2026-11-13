@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Pages\Schemas;
 
+use App\Models\Page;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
@@ -83,6 +84,28 @@ class PageForm
                                 'Имена файлов можно писать с пробелами и по-русски — ссылка всё равно будет корректной. '.
                                 'Все загруженные PDF выводятся списком под текстом, а картинки — галереей; при желании их можно дополнительно вставить прямо в текст.'
                             ))
+                            ->columnSpanFull(),
+                    ]),
+                Section::make('Фон сайта')
+                    ->description('Картинка ложится плиткой на светлую область всех страниц. Загрузите новый вариант — и фон сразу сменится; можно перебирать сколько угодно.')
+                    ->visible(fn (?Page $record): bool => $record !== null && $record->type === 'home')
+                    ->schema([
+                        FileUpload::make('background')
+                            ->label('Картинка фона')
+                            ->image()
+                            ->disk('public')
+                            ->directory('backgrounds')
+                            ->acceptedFileTypes([
+                                'image/jpeg',
+                                'image/png',
+                                'image/webp',
+                                'image/gif',
+                                'image/avif',
+                            ])
+                            ->maxSize(10240)
+                            ->deletable()
+                            ->deleteUploadedFileUsing(static fn (string $file) => Storage::disk('public')->delete($file))
+                            ->getUploadedFileNameForStorageUsing(static fn (TemporaryUploadedFile $file): string => self::safeFileName($file))
                             ->columnSpanFull(),
                     ]),
                 Section::make('SEO')
