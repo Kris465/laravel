@@ -7,13 +7,10 @@
 <section class="main-content">
     <div class="container">
         <article class="content-area">
-            @if(isset($page))
-                {{ $page->renderedContent() }}
-            @else
-                <h1 class="content-area__title">Страница не найдена</h1>
-                <p>Контент для этой страницы ещё не создан.</p>
-            @endif
+            {{ $page->renderedContent() }}
         </article>
+
+        @include('partials.page-media')
     </div>
 </section>
 @endsection

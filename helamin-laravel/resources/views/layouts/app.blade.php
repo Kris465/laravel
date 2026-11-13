@@ -6,6 +6,7 @@
     <title>@yield('title', 'Helamin')</title>
     <meta name="description" content="@yield('meta_description', 'HELAMIN — средства для водоподготовки и защиты от коррозии')">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/media.css') }}">
     @stack('styles')
 </head>
 <body>

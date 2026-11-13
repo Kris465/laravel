@@ -29,6 +29,8 @@
         <article class="content-area">
             {{ $page->renderedContent() }}
         </article>
+
+        @include('partials.page-media')
     </div>
 </section>
 @endif

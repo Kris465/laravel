@@ -81,6 +81,38 @@ class PageTest extends TestCase
             ->assertHeader('X-Content-Type-Options', 'nosniff');
     }
 
+    public function test_media_uploaded_by_managers_is_rendered(): void
+    {
+        Page::query()->where('slug', 'biblioteka')->update([
+            'images' => ['images/produkt.jpg'],
+            'documents' => ['documents/passport.pdf'],
+        ]);
+
+        $this->get('/biblioteka')
+            ->assertOk()
+            ->assertSee('/storage/images/produkt.jpg', false)
+            ->assertSee('/storage/documents/passport.pdf', false)
+            ->assertSee('download', false);
+    }
+
+    public function test_content_form_renders_in_admin(): void
+    {
+        $user = User::factory()->create(['is_admin' => true]);
+        $page = Page::query()->where('slug', 'news')->firstOrFail();
+
+        $this->actingAs($user, 'web')
+            ->get('/admin/pages/'.$page->id.'/edit')
+            ->assertOk()
+            ->assertSee('Текст страницы', false);
+    }
+
+    public function test_managers_cannot_create_pages(): void
+    {
+        $user = User::factory()->create(['is_admin' => true]);
+
+        $this->actingAs($user, 'web')->get('/admin/pages/create')->assertNotFound();
+    }
+
     public function test_admin_user_can_open_admin_panel(): void
     {
         $user = User::factory()->create(['is_admin' => true]);

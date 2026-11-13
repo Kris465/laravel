@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -15,10 +16,14 @@ class Page extends Model
         'meta_description',
         'type',
         'is_active',
+        'images',
+        'documents',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'images' => 'array',
+        'documents' => 'array',
     ];
 
     public static function getBySlug(string $slug): ?self
@@ -36,5 +41,24 @@ class Page extends Model
             'html_input' => 'strip',
             'allow_unsafe_links' => false,
         ]));
+    }
+
+    /** @return array<int, string> */
+    public function imageUrls(): array
+    {
+        return collect($this->images ?? [])
+            ->map(fn (string $path) => Storage::disk('public')->url($path))
+            ->all();
+    }
+
+    /** @return array<int, array{name: string, url: string}> */
+    public function documentLinks(): array
+    {
+        return collect($this->documents ?? [])
+            ->map(fn (string $path) => [
+                'name' => basename($path),
+                'url' => Storage::disk('public')->url($path),
+            ])
+            ->all();
     }
 }
