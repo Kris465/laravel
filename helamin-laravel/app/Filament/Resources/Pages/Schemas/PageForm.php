@@ -24,11 +24,11 @@ class PageForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
-            ->columns(['md' => 3])
+            ->columns(3)
             ->components([
                 Section::make('Текст страницы')
                     ->description('Здесь меняется только содержимое. Адрес страницы и разделы сайта задаёт разработчик.')
-                    ->columnSpan(['md' => 2])
+                    ->columnSpan(2)
                     ->schema([
                         TextInput::make('title')
                             ->required()
@@ -116,7 +116,7 @@ class PageForm
                             TextInput::make('meta_description')
                                 ->label('Meta description'),
                         ]),
-                ])->columnSpan(['md' => 1]),
+                ])->columns(1)->columnSpan(1),
             ]);
     }
 

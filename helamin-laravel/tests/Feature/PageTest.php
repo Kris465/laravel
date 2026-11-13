@@ -167,7 +167,10 @@ class PageTest extends TestCase
             ->assertOk()
             ->assertSee('Текст страницы', false)
             ->assertDontSee('Фон сайта', false)
-            ->assertDontSee('Delete', false);
+            ->assertDontSee('Delete', false)
+            ->assertSee('--cols-lg: repeat(3', false)
+            ->assertSee('--col-span-lg: span 2 / span 2', false)
+            ->assertSee('--cols-lg: repeat(1', false);
     }
 
     public function test_pages_cannot_be_created_or_deleted_via_resource(): void

@@ -12,8 +12,15 @@ body {
     background-attachment: fixed;
 }
 
+/*
+   Подложка оставлена, чтобы текст читался на пёстрой картинке, но сделана
+   заметно прозрачнее: плитка хорошо видна. Лёгкое размытие подложки
+   сохраняет контраст. Чтобы убрать подложку совсем — удалите это правило.
+*/
 body.has-site-background .main-content {
-    background: rgba(255, 255, 255, 0.86);
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
 
 .page-gallery {
