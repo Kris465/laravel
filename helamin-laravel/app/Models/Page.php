@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 
@@ -43,11 +42,27 @@ class Page extends Model
         ]));
     }
 
+    /**
+     * Относительный URL медиа с посегментным экранированием: пробелы и кириллица
+     * в именах файлов не ломают ни <img>, ни Markdown-ссылку. Относительный путь
+     * важен: Storage::url() подставляет APP_URL и на локальном сервере указывает
+     * не на тот хост.
+     */
+    public static function mediaUrl(string $path): string
+    {
+        $segments = explode('/', ltrim($path, '/'));
+
+        return '/storage/'.implode('/', array_map(
+            static fn (string $segment): string => rawurlencode($segment),
+            $segments,
+        ));
+    }
+
     /** @return array<int, string> */
     public function imageUrls(): array
     {
         return collect($this->images ?? [])
-            ->map(fn (string $path) => Storage::disk('public')->url($path))
+            ->map(fn (string $path): string => self::mediaUrl($path))
             ->all();
     }
 
@@ -55,9 +70,9 @@ class Page extends Model
     public function documentLinks(): array
     {
         return collect($this->documents ?? [])
-            ->map(fn (string $path) => [
+            ->map(fn (string $path): array => [
                 'name' => basename($path),
-                'url' => Storage::disk('public')->url($path),
+                'url' => self::mediaUrl($path),
             ])
             ->all();
     }

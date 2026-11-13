@@ -8,7 +8,10 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
+use Livewire\Features\SupportFileUploads\TemporaryUploadedFile;
 
 class PageForm
 {
@@ -49,6 +52,9 @@ class PageForm
                                 'image/avif',
                             ])
                             ->maxSize(10240)
+                            ->deletable()
+                            ->deleteUploadedFileUsing(static fn (string $file) => Storage::disk('public')->delete($file))
+                            ->getUploadedFileNameForStorageUsing(static fn (TemporaryUploadedFile $file): string => self::safeFileName($file))
                             ->panelLayout('grid')
                             ->columnSpanFull(),
                     ]),
@@ -62,16 +68,20 @@ class PageForm
                             ->directory('documents')
                             ->acceptedFileTypes(['application/pdf'])
                             ->maxSize(20480)
-                            ->preserveFilenames()
+                            ->deletable()
+                            ->deleteUploadedFileUsing(static fn (string $file) => Storage::disk('public')->delete($file))
+                            ->getUploadedFileNameForStorageUsing(static fn (TemporaryUploadedFile $file): string => self::safeFileName($file))
                             ->openable()
                             ->downloadable()
                             ->columnSpanFull(),
                         Placeholder::make('documents_hint')
                             ->label('Как вставить ссылку на документ в текст')
                             ->content(new HtmlString(
-                                'Загрузите PDF, сохраните страницу — в разделе «Просмотр» появятся готовые ссылки. '.
-                                'В тексте напишите, например: <code>[Скачать паспорт безопасности](/storage/documents/passport.pdf)</code>. '.
-                                'Посетитель скачает документ, нажав на слова ссылки. Все загруженные PDF также выводятся списком под текстом страницы.'
+                                'Загрузите файлы и сохраните страницу — в разделе «Просмотр» появятся готовые, уже экранированные ссылки. '.
+                                'Документ в тексте: <code>[Скачать паспорт](/storage/documents/passport.pdf)</code>, '.
+                                'картинка: <code>![Описание картинки](/storage/images/photo.jpg)</code>. '.
+                                'Имена файлов можно писать с пробелами и по-русски — ссылка всё равно будет корректной. '.
+                                'Все загруженные PDF выводятся списком под текстом, а картинки — галереей; при желании их можно дополнительно вставить прямо в текст.'
                             ))
                             ->columnSpanFull(),
                     ]),
@@ -82,5 +92,17 @@ class PageForm
                             ->columnStart(1),
                     ]),
             ]);
+    }
+
+    /**
+     * Читаемое, но безопасное имя: пробелы/кириллица превращаются в slug,
+     * ULID гарантирует уникальность (иначе повторная загрузка перезапишет файл,
+     * а удаление «залипнет»), расширение берётся из исходного файла.
+     */
+    private static function safeFileName(TemporaryUploadedFile $file): string
+    {
+        $base = Str::slug(pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)) ?: 'file';
+
+        return $base.'-'.Str::lower(Str::ulid()).'.'.$file->getClientOriginalExtension();
     }
 }

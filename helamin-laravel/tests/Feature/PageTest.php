@@ -103,6 +103,33 @@ class PageTest extends TestCase
             ->assertSee('download', false);
     }
 
+    public function test_media_names_with_spaces_are_escaped(): void
+    {
+        Page::query()->where('slug', 'biblioteka')->update([
+            'images' => ['images/Мой файл 1.jpg'],
+            'documents' => ['documents/my document.pdf'],
+        ]);
+
+        $this->get('/biblioteka')
+            ->assertOk()
+            ->assertSee(Page::mediaUrl('images/Мой файл 1.jpg'), false)
+            ->assertSee(Page::mediaUrl('documents/my document.pdf'), false)
+            ->assertDontSee('src="/storage/images/Мой файл 1.jpg"', false);
+    }
+
+    public function test_images_can_be_inserted_into_markdown_text(): void
+    {
+        Page::query()->where('slug', 'news')->update([
+            'content' => "# Новости\n\n![Фото котла](/storage/images/kotel.jpg)",
+        ]);
+
+        $this->get('/news')
+            ->assertOk()
+            ->assertSee('<img', false)
+            ->assertSee('/storage/images/kotel.jpg', false)
+            ->assertSee('alt="Фото котла"', false);
+    }
+
     public function test_content_form_renders_in_admin(): void
     {
         $user = User::factory()->create(['is_admin' => true]);
