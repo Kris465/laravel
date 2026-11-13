@@ -18,7 +18,7 @@ class AdminUserSeeder extends Seeder
         $adminPassword = config('helamin.admin_password');
 
         // Ensure credentials are set
-        if (!$adminEmail || !$adminPassword) {
+        if (! $adminEmail || ! $adminPassword) {
             throw new \InvalidArgumentException(
                 'ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env'
             );

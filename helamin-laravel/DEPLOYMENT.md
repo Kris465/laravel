@@ -1,22 +1,34 @@
-# Инструкция по деплою админки Helamin
+# Деплой Helamin
 
 ## Требования
-- PHP >= 8.3 с расширениями: intl, pdo, mbstring, openssl, ctype
+
+- PHP >= 8.3 (`intl`, `pdo`, `mbstring`, `openssl`, `ctype`)
 - Composer
-- База данных (MySQL/PostgreSQL/SQLite)
+- MySQL (или SQLite для локальной разработки)
+- Apache с `mod_rewrite`; `DocumentRoot` указывает на `public/`
 
-## Шаги для деплоя
+На хостинге приложение живёт в `/home/helamin/helamin.ru/temp-laravel` —
+этот же путь указан в `helamin-ru-laravel.conf` и `htaccess-laravel-redirect`.
 
-### 1. Обновление зависимостей
+## Шаги
+
+### 1. Код и зависимости
+
 ```bash
+cd /home/helamin/helamin.ru/temp-laravel
+git pull origin main
 composer install --no-dev --optimize-autoloader
 ```
 
-### 2. Настройка .env
+`filament/filament` находится в `require`, поэтому админка работает и без
+dev-зависимостей.
+
+### 2. `.env`
+
 ```env
 APP_NAME=Helamin
 APP_ENV=production
-APP_KEY=base64:ваш_ключ
+APP_KEY=base64:...
 APP_DEBUG=false
 APP_URL=https://helamin.ru
 
@@ -25,46 +37,56 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_DATABASE=helamin
 DB_USERNAME=helamin
-DB_PASSWORD=ваш_пароль
+DB_PASSWORD=...
+
+ADMIN_EMAIL=...
+ADMIN_PASSWORD=...
 ```
 
-### 3. Запуск миграций
+Пароль администратора задаётся только через `.env`; значения читаются через
+`config/helamin.php`, поэтому `config:cache` не ломает сидер.
+
+### 3. Миграции и контент
+
 ```bash
 php artisan migrate --force
-```
-
-### 4. Запуск сидеров (для создания администратора)
-```bash
 php artisan db:seed --class=AdminUserSeeder --force
 php artisan db:seed --class=PageSeeder --force
 ```
 
-### 5. Ассеты админки и публичная папка документов
+`PageSeeder` идемпотентен (`updateOrCreate`), поэтому его можно запускать
+повторно. Он деактивирует slug удалённых разделов, но не удаляет данные.
+
+### 4. Ассеты и публичная папка
+
 ```bash
 php artisan filament:assets
 php artisan storage:link
+chmod -R 775 storage bootstrap/cache
 ```
-`filament/filament` находится в `require` (не в `require-dev`), поэтому админка работает
-при установке `composer install --no-dev`. Загруженные менеджерами картинки и PDF
-лежат в `storage/app/public/images` и `storage/app/public/documents` и доступны
-по URL `/storage/...`.
 
-### 6. Очистка кэша
+Картинки менеджеров лежат в `storage/app/public/images`, PDF — в
+`storage/app/public/documents`, оба доступны по URL `/storage/...`.
+Без `storage:link` ссылки на документы и галерея не откроются.
+
+### 5. Кэш
+
 ```bash
 php artisan optimize:clear
 php artisan config:cache
 php artisan route:cache
+php artisan view:cache
 ```
 
-## Управление страницами
-Через админку можно:
-- Добавлять новые страницы
-- Редактировать контент существующих страниц
-- Менять SEO-описания
-- Включать/выключать страницы
+Готовый сценарий — `bash deploy.sh` из каталога приложения.
 
-Для изменения контента:
-1. Войдите в админку по /admin/login (учётные данные задаются в .env)
-2. Перейдите в раздел "Pages"
-3. Выберите страницу для редактирования
-4. Внесите изменения и сохраните
+## Проверка после деплоя
+
+- все пункты меню открываются (19 страниц);
+- `/admin/login` доступен, гость редиректится, менеджер видит только поля контента;
+- PDF скачивается по ссылке из текста и из списка документов;
+- загруженная картинка отображается в галерее;
+- заголовок `Content-Security-Policy` приходит на публичных страницах.
+
+> Деплой в репозиторий сам по себе ничего не меняет на сайте: изменения
+> вступают в силу только после выполнения шагов на хостинге.

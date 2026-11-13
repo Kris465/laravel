@@ -12,7 +12,7 @@ class PagesTable
 {
     public static function configure(Table $table): Table
     {
-                return $table
+        return $table
             ->columns([
                 TextColumn::make('slug')
                     ->label('URL')
