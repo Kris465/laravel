@@ -26,6 +26,15 @@ class Page extends Model
         'documents' => 'array',
     ];
 
+    /**
+     * Последняя линия защиты: даже если где-то останется кнопка удаления
+     * или кто-то вызовет delete() из консоли, главная страница не исчезнет.
+     */
+    protected static function booted(): void
+    {
+        static::deleting(static fn (self $page): bool => $page->slug !== '/');
+    }
+
     public static function getBySlug(string $slug): ?self
     {
         return static::where('slug', $slug)->where('is_active', true)->first();

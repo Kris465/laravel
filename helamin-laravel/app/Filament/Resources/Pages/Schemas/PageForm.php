@@ -7,6 +7,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Storage;
@@ -23,9 +24,11 @@ class PageForm
     public static function configure(Schema $schema): Schema
     {
         return $schema
+            ->columns(['md' => 3])
             ->components([
                 Section::make('Текст страницы')
                     ->description('Здесь меняется только содержимое. Адрес страницы и разделы сайта задаёт разработчик.')
+                    ->columnSpan(['md' => 2])
                     ->schema([
                         TextInput::make('title')
                             ->required()
@@ -35,6 +38,7 @@ class PageForm
                             ->helperText('Markdown: # заголовок, **жирный**, - список, [текст ссылки](/адрес). Сырой HTML при публикации вырезается.')
                             ->columnSpanFull(),
                     ]),
+                Group::make([
                 Section::make('Картинки')
                     ->description('Можно выбрать сразу несколько файлов и менять их порядок. Форматы: JPG, PNG, WebP, GIF, AVIF. SVG запрещён из соображений безопасности.')
                     ->schema([
@@ -111,9 +115,9 @@ class PageForm
                 Section::make('SEO')
                     ->schema([
                         TextInput::make('meta_description')
-                            ->label('Meta description')
-                            ->columnStart(1),
+                            ->label('Meta description'),
                     ]),
+                ])->columnSpan(['md' => 1]),
             ]);
     }
 

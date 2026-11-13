@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Filament\Resources\Pages\PageResource;
 use App\Models\Page;
 use App\Models\User;
 use Database\Seeders\PageSeeder;
@@ -165,7 +166,25 @@ class PageTest extends TestCase
             ->get('/admin/pages/'.$page->id.'/edit')
             ->assertOk()
             ->assertSee('Текст страницы', false)
-            ->assertDontSee('Фон сайта', false);
+            ->assertDontSee('Фон сайта', false)
+            ->assertDontSee('Delete', false);
+    }
+
+    public function test_pages_cannot_be_created_or_deleted_via_resource(): void
+    {
+        $page = Page::query()->where('slug', 'news')->firstOrFail();
+
+        $this->assertFalse(PageResource::canCreate());
+        $this->assertFalse(PageResource::canDelete($page));
+        $this->assertFalse(PageResource::canDeleteAny());
+    }
+
+    public function test_home_page_cannot_be_deleted(): void
+    {
+        $home = Page::query()->where('slug', '/')->firstOrFail();
+
+        $this->assertFalse($home->delete());
+        $this->assertDatabaseHas('pages', ['slug' => '/']);
     }
 
     public function test_managers_cannot_create_pages(): void

@@ -14,6 +14,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 
 class PageResource extends Resource
 {
@@ -50,5 +51,25 @@ class PageResource extends Resource
             'view' => ViewPage::route('/{record}'),
             'edit' => EditPage::route('/{record}/edit'),
         ];
+    }
+
+    /**
+     * Менеджеры редактируют контент, но не структуру: ни одной страницы
+     * нельзя ни создать, ни удалить — ни из формы, ни из таблицы, ни напрямую
+     * через action. Набор страниц определяется routes/web.php и PageSeeder.
+     */
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(Model $record): bool
+    {
+        return false;
+    }
+
+    public static function canDeleteAny(): bool
+    {
+        return false;
     }
 }
