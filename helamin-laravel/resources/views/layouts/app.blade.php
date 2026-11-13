@@ -24,10 +24,8 @@
                 <li><a href="{{ url('/') }}" class="main-nav__link @if(request()->is('/')) main-nav__link--active @endif">ГЛАВНАЯ</a></li>
                 <li><a href="{{ url('/o-produkte') }}" class="main-nav__link @if(request()->is('o-produkte*')) main-nav__link--active @endif">О ПРОДУКТЕ</a></li>
                 <li><a href="{{ url('/oblast-primeneniya') }}" class="main-nav__link @if(request()->is('oblast-primeneniya*')) main-nav__link--active @endif">ОБЛАСТИ ПРИМЕНЕНИЯ</a></li>
-                <li><a href="{{ url('/otrasli-promyshlennosti') }}" class="main-nav__link @if(request()->is('otrasli-promyshlennosti*')) main-nav__link--active @endif">ОТРАСЛИ ПРОМЫШЛЕННОСТИ</a></li>
                 <li><a href="{{ url('/news') }}" class="main-nav__link @if(request()->is('news*')) main-nav__link--active @endif">НОВОСТИ</a></li>
                 <li><a href="{{ url('/biblioteka') }}" class="main-nav__link @if(request()->is('biblioteka*')) main-nav__link--active @endif">БИБЛИОТЕКА</a></li>
-                <li><a href="{{ url('/referentsii') }}" class="main-nav__link @if(request()->is('referentsii*')) main-nav__link--active @endif">РЕФЕРЕНЦИИ</a></li>
                 <li><a href="{{ url('/contacts') }}" class="main-nav__link @if(request()->is('contacts')) main-nav__link--active @endif">КОНТАКТЫ</a></li>
             </ul>
         </div>

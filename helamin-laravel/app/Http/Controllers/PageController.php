@@ -3,33 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Page;
+use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
 {
-    public function show(Request $request)
+    public function show(Request $request): View
     {
-        // Получаем slug из URL
-        $path = $request->path();
-        $slug = urldecode($path);
-        
-        $page = Page::where('slug', $slug)->where('is_active', true)->first();
-        
-        if (!$page) {
-            abort(404);
-        }
-        
-        // Выбор шаблона в зависимости от типа страницы
-        $templates = [
-            'home' => 'pages.home_dynamic',
-            'simple' => 'pages.dynamic',
-        ];
-        
-        $template = $templates[$page->type] ?? 'pages.dynamic';
-        
-        return view($template, [
-            'page' => $page,
-            'meta_description' => $page->meta_description,
-        ]);
+        $page = Page::query()
+            ->where('slug', $this->slugFromPath($request->path()))
+            ->where('is_active', true)
+            ->first();
+
+        abort_unless($page, 404);
+
+        return view(
+            $page->type === 'home' ? 'pages.home_dynamic' : 'pages.dynamic',
+            [
+                'page' => $page,
+                'meta_description' => $page->meta_description,
+            ],
+        );
+    }
+
+    private function slugFromPath(string $path): string
+    {
+        $slug = trim($path, '/');
+
+        return $slug === '' ? '/' : $slug;
     }
 }
