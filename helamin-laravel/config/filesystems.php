@@ -41,7 +41,9 @@ return [
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            // Относительный URL: превью Filament и ссылки на медиа работают на
+            // любом хосте (localhost, 127.0.0.1, прод), а не только на APP_URL.
+            'url' => '/storage',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

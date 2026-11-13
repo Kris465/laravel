@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Page;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PageTest extends TestCase
@@ -13,6 +14,11 @@ class PageTest extends TestCase
 
         $this->assertTrue($page->is_active);
         $this->assertSame('Тест', $page->title);
+    }
+
+    public function test_public_disk_urls_are_relative(): void
+    {
+        $this->assertSame('/storage/images/a.jpg', Storage::disk('public')->url('images/a.jpg'));
     }
 
     public function test_media_url_encodes_each_path_segment(): void

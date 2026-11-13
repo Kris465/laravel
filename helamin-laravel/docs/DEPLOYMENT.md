@@ -68,7 +68,9 @@ chmod -R 775 storage bootstrap/cache
 
 Картинки менеджеров лежат в `storage/app/public/images`, PDF — в
 `storage/app/public/documents`, фон сайта — в `storage/app/public/backgrounds`.
-Все три папки доступны по URL `/storage/...`.
+Все три папки доступны по URL `/storage/...`. URL публичного диска задан в
+`config/filesystems.php` как относительный `/storage`, поэтому превью в админке
+и ссылки на медиа не зависят от `APP_URL` и работают на любом хосте.
 Без `storage:link` ссылки на документы, галерея и фон не откроются.
 
 ### 5. Кэш
