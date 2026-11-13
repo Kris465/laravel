@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Helamin')</title>
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml" sizes="any">
+    <link rel="alternate icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
     <meta name="description" content="@yield('meta_description', 'HELAMIN — средства для водоподготовки и защиты от коррозии')">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     <link rel="stylesheet" href="{{ asset('css/media.css') }}">

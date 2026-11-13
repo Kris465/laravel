@@ -8,7 +8,8 @@
 - Apache с `mod_rewrite`; `DocumentRoot` указывает на `public/`
 
 На хостинге приложение живёт в `/home/helamin/helamin.ru/temp-laravel` —
-этот же путь указан в `helamin-ru-laravel.conf` и `htaccess-laravel-redirect`.
+этот же путь указан в `helamin-ru-laravel.conf` и `htaccess-laravel-redirect`
+(оба лежат в корне репозитория, на уровень выше `helamin-laravel/`).
 
 ## Шаги
 

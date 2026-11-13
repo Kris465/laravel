@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+    <title>HELAMIN</title>
+    <rect width="64" height="64" rx="9" fill="#ffffff"/>
+    <path fill="#e92627" d="M10 8h13v19h18V8h13v48H41V37H23v19H10z"/>
+</svg>

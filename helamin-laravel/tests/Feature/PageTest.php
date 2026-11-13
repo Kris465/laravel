@@ -73,6 +73,14 @@ class PageTest extends TestCase
         $response->assertDontSee('javascript:', false);
     }
 
+    public function test_favicon_is_linked(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('favicon.svg', false)
+            ->assertSee('image/svg+xml', false);
+    }
+
     public function test_public_pages_send_security_headers(): void
     {
         $this->get('/')
