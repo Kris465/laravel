@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class Page extends Model
 {
@@ -22,5 +24,17 @@ class Page extends Model
     public static function getBySlug(string $slug): ?self
     {
         return static::where('slug', $slug)->where('is_active', true)->first();
+    }
+
+    /**
+     * Контент хранится в Markdown. Сырой HTML вырезается, опасные ссылки
+     * (javascript:, data:) блокируются — сайт восстанавливался после JS-инъекции.
+     */
+    public function renderedContent(): HtmlString
+    {
+        return new HtmlString(Str::markdown($this->content ?? '', [
+            'html_input' => 'strip',
+            'allow_unsafe_links' => false,
+        ]));
     }
 }

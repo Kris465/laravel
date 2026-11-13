@@ -6,6 +6,7 @@ use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
+use Illuminate\Support\Str;
 
 class PageInfolist
 {
@@ -33,7 +34,10 @@ class PageInfolist
                         TextEntry::make('content')
                             ->label('')
                             ->html()
-                            ->formatStateUsing(fn ($state) => new HtmlString($state ?? '')),
+                            ->formatStateUsing(fn ($state) => new HtmlString(Str::markdown($state ?? '', [
+                                'html_input' => 'strip',
+                                'allow_unsafe_links' => false,
+                            ]))),
                     ]),
             ]);
     }

@@ -60,6 +60,27 @@ class PageTest extends TestCase
         $this->get('/admin')->assertRedirect();
     }
 
+    public function test_content_is_sanitized(): void
+    {
+        Page::query()->where('slug', 'news')->update([
+            'content' => "# Новости\n\n<script>alert('xss')</script>\n\n[Опасная ссылка](javascript:alert(1))",
+        ]);
+
+        $response = $this->get('/news')->assertOk();
+
+        $response->assertSee('<h1>Новости</h1>', false);
+        $response->assertDontSee('<script>', false);
+        $response->assertDontSee('javascript:', false);
+    }
+
+    public function test_public_pages_send_security_headers(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertHeader('Content-Security-Policy')
+            ->assertHeader('X-Content-Type-Options', 'nosniff');
+    }
+
     public function test_admin_user_can_open_admin_panel(): void
     {
         $user = User::factory()->create(['is_admin' => true]);

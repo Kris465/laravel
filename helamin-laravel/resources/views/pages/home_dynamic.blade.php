@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('title', 'Helamin — Средства для водоподготовки и защиты от коррозии')
+@section('meta_description', $page->meta_description ?? '')
 
 @section('content')
 <section class="hero">
@@ -26,7 +27,7 @@
 <section class="main-content">
     <div class="container">
         <article class="content-area">
-            {!! $page->content !!}
+            {{ $page->renderedContent() }}
         </article>
     </div>
 </section>

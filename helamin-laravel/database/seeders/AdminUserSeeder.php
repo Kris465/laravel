@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,10 +13,9 @@ class AdminUserSeeder extends Seeder
      */
     public function run(): void
     {
-                // Get admin credentials from .env ONLY
-        // NEVER commit real credentials to version control!
-        $adminEmail = env('ADMIN_EMAIL');
-        $adminPassword = env('ADMIN_PASSWORD');
+        // Креды читаются через config(), чтобы сидер работал при config:cache.
+        $adminEmail = config('helamin.admin_email');
+        $adminPassword = config('helamin.admin_password');
 
         // Ensure credentials are set
         if (!$adminEmail || !$adminPassword) {
