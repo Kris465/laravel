@@ -39,7 +39,17 @@ php artisan db:seed --class=AdminUserSeeder --force
 php artisan db:seed --class=PageSeeder --force
 ```
 
-### 5. Очистка кэша
+### 5. Ассеты админки и публичная папка документов
+```bash
+php artisan filament:assets
+php artisan storage:link
+```
+`filament/filament` находится в `require` (не в `require-dev`), поэтому админка работает
+при установке `composer install --no-dev`. Загруженные менеджерами картинки и PDF
+лежат в `storage/app/public/images` и `storage/app/public/documents` и доступны
+по URL `/storage/...`.
+
+### 6. Очистка кэша
 ```bash
 php artisan optimize:clear
 php artisan config:cache

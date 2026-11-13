@@ -2,7 +2,7 @@
 # ============================================
 # Helamin Laravel — скрипт деплоя
 # Запускать из директории проекта на сервере:
-#   cd /home/helamin/helamin.ru/laravel
+#   cd /home/helamin/helamin.ru/temp-laravel
 #   bash deploy.sh
 # ============================================
 
@@ -23,12 +23,16 @@ php artisan route:clear
 echo ">>> Запуск миграций..."
 php artisan migrate --force
 
+echo ">>> Публикация ассетов Filament и ссылки на storage..."
+php artisan filament:assets
+php artisan storage:link
+
 echo ">>> Кеширование конфигурации..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
 echo ">>> Установка прав..."
-chmod -R 755 storage bootstrap/cache
+chmod -R 775 storage bootstrap/cache
 
 echo ">>> Деплой завершён!"
