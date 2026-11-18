@@ -1,0 +1,1 @@
+/home/helamin/helamin.ru/helamin-laravel/public/build

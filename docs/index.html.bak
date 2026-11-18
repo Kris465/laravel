@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Ключевые мета-теги для индексации -->
+    <title>Helamin - Официальный сайт. Скоро возвращаемся!</title>
+    <meta name="description" content="Сайт Helamin находится в процессе обновления. Для связи используйте info@helamin.ru или +7 495 795 36 05.">
+    <meta name="robots" content="noindex, nofollow"> <!-- ЗАМЕНИТЕ НА СЛЕДУЮЩУЮ СТРОКУ, КОГДА БУДЕТЕ ГОТОВЫ -->
+    <!-- <meta name="robots" content="all"> --> 
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 50px 40px;
+            text-align: center;
+            border: 1px solid #e1e8ed;
+        }
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            letter-spacing: -1px;
+        }
+        .logo-subtitle {
+            font-size: 1.2rem;
+            color: #7f8c8d;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+        h1 {
+            font-size: 2.8rem;
+            color: #2980b9;
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        .message {
+            font-size: 1.4rem;
+            color: #555;
+            margin-bottom: 40px;
+        }
+        .contacts {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            border-left: 5px solid #3498db;
+        }
+        .contacts h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        .contact-item {
+            font-size: 1.5rem;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .contact-item a {
+            color: #2980b9;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        .contact-item a:hover {
+            color: #1a5276;
+            text-decoration: underline;
+        }
+        .icon {
+            font-size: 1.8rem;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .status-note {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px dashed #ddd;
+            color: #95a5a6;
+            font-size: 1rem;
+        }
+        @media (max-width: 768px) {
+            .container { padding: 30px 20px; }
+            .logo { font-size: 2.8rem; }
+            h1 { font-size: 2.2rem; }
+            .message, .contact-item { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">HELAMIN</div>
+        <div class="logo-subtitle">Официальный сайт</div>
+
+        <h1>Сайт на реконструкции</h1>
+        <p class="message">
+            Мы работаем над улучшением нашего сайта, чтобы предложить вам более удобный и современный сервис.
+            <br><br>
+            Скоро мы вернёмся в обновлённом виде!
+        </p>
+
+        <div class="contacts">
+            <h2>Свяжитесь с нами</h2>
+            <div class="contact-item">
+                <span class="icon">📧</span>
+                Эл. почта: <a href="mailto:info@helamin.ru">info@helamin.ru</a>
+            </div>
+            <div class="contact-item">
+                <span class="icon">📞</span>
+                Телефон: <a href="tel:+74957953605">+7 (495) 795-36-05</a>
+            </div>
+        </div>
+
+        <p class="status-note">
+            <!-- Этот тег говорит поисковым системам, что страница временно недоступна, но её нужно сохранить в индексе. -->
+            <strong>Важно для поисковых систем:</strong> Страница находится на техническом обслуживании. Индексация сохранена.
+        </p>
+    </div>
+</body>
+</html>
