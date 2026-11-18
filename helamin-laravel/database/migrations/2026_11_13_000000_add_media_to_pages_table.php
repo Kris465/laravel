@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('pages', function (Blueprint $table) {
-            $table->json('images')->nullable()->after('content');
-            $table->json('documents')->nullable()->after('images');
+            $table->longText('images')->nullable()->after('content');
+            $table->longText('documents')->nullable()->after('images');
         });
     }
 
