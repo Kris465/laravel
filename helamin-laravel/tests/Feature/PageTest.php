@@ -79,10 +79,13 @@ class PageTest extends TestCase
 
     public function test_favicon_is_linked(): void
     {
+        // Иконка встроена data-URI: хостинг не отдаёт .svg как статику.
         $this->get('/')
             ->assertOk()
-            ->assertSee('favicon.svg', false)
-            ->assertSee('image/svg+xml', false);
+            ->assertSee('rel="icon"', false)
+            ->assertSee('data:image/svg+xml', false)
+            ->assertSee('image/svg+xml', false)
+            ->assertSee('%23e92627', false);
     }
 
     public function test_public_pages_send_security_headers(): void

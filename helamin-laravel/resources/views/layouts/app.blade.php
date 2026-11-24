@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Helamin')</title>
-    {{-- Только SVG: favicon.ico в репозитории пустой (0 байт) и перебивал иконку.
-         ?v= по mtime сбрасывает агрессивный кэш favicon в браузере. --}}
-    <link rel="icon" href="{{ asset('favicon.svg') }}?v={{ filemtime(public_path('favicon.svg')) }}" type="image/svg+xml" sizes="any">
+    {{-- Иконка встроена data-URI: хостинг не отдаёт /favicon.svg как статику
+         (запрос уходит в Laravel и даёт 404), а favicon.ico пустой (0 байт).
+         Встроенный SVG не зависит от MIME, правил веб-сервера и кэша файла.
+         Источник геометрии — public/favicon.svg. --}}
+    @php($helaminFavicon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="9" fill="#ffffff"/><path fill="#e92627" d="M10 8h13v19h18V8h13v48H41V37H23v19H10z"/></svg>')
+    <link rel="icon" href="data:image/svg+xml,{{ rawurlencode($helaminFavicon) }}" type="image/svg+xml" sizes="any">
     <meta name="description" content="@yield('meta_description', 'HELAMIN — средства для водоподготовки и защиты от коррозии')">
     {{-- Версия по mtime: иначе браузер/прокси держит старый CSS по ETag после деплоя. --}}
     <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
