@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MediaController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
@@ -12,6 +13,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', [PageController::class, 'show'])->name('home');
+
+// Стабильные ссылки на файлы медиатеки: /media/{id} -> актуальный /storage/...
+// whereNumber защищает от совпадения с обычными адресами страниц.
+Route::get('/media/{media}', [MediaController::class, 'show'])
+    ->whereNumber('media')
+    ->name('media.show');
 
 Route::get('/o-produkte', [PageController::class, 'show'])->name('o-produkte');
 Route::get('/o-produkte/opisanie', [PageController::class, 'show'])->name('o-produkte.opisanie');

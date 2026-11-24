@@ -2,14 +2,21 @@
 
 namespace App\Filament\Resources\Pages\Schemas;
 
+use App\Models\Media;
 use App\Models\Page;
 use Closure;
+use Filament\Actions\Action;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
@@ -35,12 +42,85 @@ class PageForm
                             ->label('Заголовок страницы'),
                         MarkdownEditor::make('content')
                             ->label('Текст страницы')
-                            ->helperText('Markdown: # заголовок, **жирный**, - список, [текст ссылки](/адрес). Сырой HTML при публикации вырезается.')
+                            ->helperText('Обычный текст, # заголовок, **жирный**, - список. Пути к файлам писать вручную НЕ нужно: загрузите файл, сохраните страницу и нажмите кнопку «Вставить» ниже. Сырой HTML при публикации вырезается.')
+                            ->columnSpanFull(),
+                        Actions::make(fn (?Page $record): array => self::insertMediaActions($record))
+                            ->label('Вставить файл в текст'),
+                        Placeholder::make('media_buttons_hint')
+                            ->label('')
+                            ->content(new HtmlString(
+                                'Загрузите картинку или PDF справа и нажмите «Сохранить» — здесь появятся кнопки с понятными названиями файлов этой страницы. '
+                                .'Одно нажатие добавляет в текст готовую ссылку: ничего копировать, искать и переименовывать не надо. '
+                                .'Картинки и PDF нужно вставить в текст кнопкой: картинка появится на месте ссылки, документ — мини-превью. '
+                                .'Автоматических блоков со списками файлов внизу страницы и в «Просмотре» больше нет. '
+                                .'Если нужный файл не появился в кнопках или картинка в тексте не отображается — откройте «Медиатеку» или выполните '
+                                .'<code>php artisan media:check</code>: файл мог быть удалён или переименован после вставки. '
+                                .'Ограничения загрузки: до 10 МБ, JPG/PNG/WebP/GIF/AVIF, SVG запрещён.'
+                            ))
+                            ->columnSpanFull(),
+                        Placeholder::make('feed_hint')
+                            ->label('')
+                            ->content(new HtmlString(
+                                '<strong>Лента новостей.</strong> Поле «Текст страницы» выше — это вступление. '
+                                .'Ниже добавьте отдельные карточки: дата, заголовок, картинка, текст и ссылка. '
+                                .'Порядок меняется перетаскиванием, лишний блок удаляется крестиком. '
+                                .'Никакой разметки и путей файлов писать не нужно.'
+                            ))
+                            ->visible(fn (?Page $record): bool => $record !== null && $record->slug === 'news')
+                            ->columnSpanFull(),
+                        Repeater::make('blocks')
+                            ->label('Лента новостей')
+                            ->schema([
+                                TextInput::make('date')
+                                    ->label('Дата')
+                                    ->placeholder('24.11.2026')
+                                    ->maxLength(40),
+                                TextInput::make('title')
+                                    ->label('Заголовок')
+                                    ->required()
+                                    ->maxLength(255)
+                                    ->columnSpan(2),
+                                FileUpload::make('image')
+                                    ->label('Картинка (необязательно)')
+                                    ->image()
+                                    ->disk('public')
+                                    ->directory('news')
+                                    ->acceptedFileTypes([
+                                        'image/jpeg',
+                                        'image/png',
+                                        'image/webp',
+                                        'image/gif',
+                                        'image/avif',
+                                    ])
+                                    ->maxSize(10240)
+                                    ->deletable()
+                                    ->deleteUploadedFileUsing(self::removeUploadedFile())
+                                    ->columnSpanFull(),
+                                Textarea::make('text')
+                                    ->label('Текст новости')
+                                    ->rows(4)
+                                    ->helperText('Обычный текст. HTML не нужен и будет вырезан при публикации.')
+                                    ->columnSpanFull(),
+                                TextInput::make('link')
+                                    ->label('Ссылка «Подробнее» (необязательно)')
+                                    ->placeholder('/o-produkte/opisanie')
+                                    ->helperText('Внутренняя ссылка вида /раздел или полный адрес https://…')
+                                    ->maxLength(255)
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(3)
+                            ->reorderable()
+                            ->defaultItems(0)
+                            ->itemLabel(fn (array $state): string => filled($state['title'] ?? null)
+                                ? (string) $state['title']
+                                : 'Новая запись')
+                            ->addActionLabel('Добавить новость')
+                            ->visible(fn (?Page $record): bool => $record !== null && $record->slug === 'news')
                             ->columnSpanFull(),
                     ]),
                 Group::make([
                     Section::make('Картинки')
-                        ->description('Можно выбрать сразу несколько файлов и менять их порядок. Форматы: JPG, PNG, WebP, GIF, AVIF. SVG запрещён из соображений безопасности.')
+                        ->description('До 10 МБ на файл. Форматы: JPG, PNG, WebP, GIF, AVIF (SVG запрещён). Можно менять порядок. Имена значения не имеют: чтобы картинка появилась на странице, вставьте её в текст кнопкой.')
                         ->schema([
                             FileUpload::make('images')
                                 ->label('Картинки')
@@ -64,7 +144,7 @@ class PageForm
                                 ->columnSpanFull(),
                         ]),
                     Section::make('Документы PDF')
-                        ->description('Файлы складываются в папку documents и доступны посетителям для скачивания.')
+                        ->description('После сохранения файлы появятся в кнопках «Вставить файл в текст». Отдельного списка PDF внизу страницы больше нет.')
                         ->schema([
                             FileUpload::make('documents')
                                 ->label('PDF-документы')
@@ -80,13 +160,12 @@ class PageForm
                                 ->downloadable()
                                 ->columnSpanFull(),
                             Placeholder::make('documents_hint')
-                                ->label('Как вставить ссылку на документ в текст')
+                                ->label('Как вставить документ в текст')
                                 ->content(new HtmlString(
-                                    'Загрузите файлы и сохраните страницу — в разделе «Просмотр» появятся готовые, уже экранированные ссылки. '.
-                                    'Документ в тексте: <code>[Скачать паспорт](/storage/documents/passport.pdf)</code>, '.
-                                    'картинка: <code>![Описание картинки](/storage/images/photo.jpg)</code>. '.
-                                    'Имена файлов можно писать с пробелами и по-русски — ссылка всё равно будет корректной. '.
-                                    'Все загруженные PDF выводятся списком под текстом, а картинки — галереей; при желании их можно дополнительно вставить прямо в текст.'
+                                    'Загрузите PDF, сохраните страницу — и под редактором появится кнопка с названием документа. '
+                                    .'Она вставит в текст готовую ссылку <code>/media/&lt;номер&gt;</code>, которая не зависит от имени файла. '
+                                    .'В тексте ссылка автоматически станет мини-превью с просмотром на весь экран. '
+                                    .'Никакие пути вручную писать и копировать не нужно; файлы, залитые по FTP, сайт не увидит.'
                                 ))
                                 ->columnSpanFull(),
                         ]),
@@ -118,6 +197,48 @@ class PageForm
                         ]),
                 ])->columns(1)->columnSpan(1),
             ]);
+    }
+
+    /**
+     * Кнопки вставки для файлов, уже зарегистрированных в медиатеке.
+     * Менеджер видит человеческую подпись, а не ULID-имя, и не знает ни одного
+     * пути. Нажатие дописывает готовый Markdown в поле `content`.
+     *
+     * Запрос обёрнут в rescue(): форма не должна падать, если миграция media
+     * ещё не накатилась (например, админку открыли сразу после выкладки кода).
+     *
+     * @return array<int, Action>
+     */
+    private static function insertMediaActions(?Page $record): array
+    {
+        if ($record === null) {
+            return [];
+        }
+
+        return rescue(
+            static fn (): array => Media::query()
+                ->where('page_id', $record->getKey())
+                ->whereIn('collection', ['image', 'document'])
+                ->latest()
+                ->limit(24)
+                ->get()
+                // Не предлагаем файлы, которых нет на диске, иначе менеджер
+                // вставит в текст заведомо битую картинку.
+                ->filter(fn (Media $media): bool => $media->exists())
+                ->map(fn (Media $media): Action => Action::make('insert_media_'.$media->getKey())
+                    ->label(($media->collection === 'image' ? 'Картинка: ' : 'Документ: ').$media->displayName())
+                    ->color('gray')
+                    ->action(function (Get $get, Set $set) use ($media): void {
+                        $content = trim((string) $get('content'));
+
+                        $set('content', $content === ''
+                            ? $media->markdown()
+                            : $content."\n\n".$media->markdown());
+                    }))
+                ->all(),
+            [],
+            false,
+        );
     }
 
     /**

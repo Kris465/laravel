@@ -10,7 +10,9 @@
             {{ $page->renderedContent() }}
         </article>
 
-        @include('partials.page-media')
+        @if($page->slug === 'news')
+            @include('partials.news-feed')
+        @endif
     </div>
 </section>
 @endsection

@@ -87,3 +87,85 @@
     }
   }, { passive: true });
 })();
+
+/* --- PDF preview lightbox -----------------------------------------------
+   Мини-превью -> полноэкранный просмотр. На десктопе открывается при
+   наведении (с небольшой задержкой), клик «закрепляет» окно. На тач-экранах
+   работает только клик. Никаких библиотек: CSP разрешает script-src 'self'.
+------------------------------------------------------------------------ */
+(function () {
+  var box = document.getElementById('pdfLightbox');
+  if (!box) return;
+
+  var frame = document.getElementById('pdfLightboxFrame');
+  var panel = document.getElementById('pdfLightboxPanel');
+  var nameEl = document.getElementById('pdfLightboxName');
+  var downloadLink = document.getElementById('pdfLightboxDownload');
+  var closeBtn = document.getElementById('pdfLightboxClose');
+  var cards = document.querySelectorAll('.pdf-card');
+  var hoverTimer = null;
+  var pinned = false;
+  var opener = null;
+
+  if (!frame || !panel || !closeBtn || !cards.length) return;
+
+  function open(card, byClick) {
+    var url = card.getAttribute('data-pdf-url');
+    var name = card.getAttribute('data-pdf-name') || 'Документ';
+    if (!url) return;
+
+    pinned = !!byClick;
+    opener = byClick ? card.querySelector('.pdf-card__preview') : null;
+
+    nameEl.textContent = name;
+    downloadLink.setAttribute('href', url);
+    downloadLink.setAttribute('download', name);
+    frame.src = url + '#toolbar=1&navpanes=0&scrollbar=0';
+    box.hidden = false;
+    document.body.classList.add('pdf-lightbox-open');
+    if (pinned) closeBtn.focus();
+  }
+
+  function close() {
+    pinned = false;
+    box.hidden = true;
+    frame.src = 'about:blank';
+    document.body.classList.remove('pdf-lightbox-open');
+    if (opener) { opener.focus(); opener = null; }
+  }
+
+  Array.prototype.forEach.call(cards, function (card) {
+    var link = card.querySelector('.pdf-card__preview');
+    if (!link) return;
+
+    link.addEventListener('click', function (e) {
+      e.preventDefault(); /* без JS ссылка просто открывает PDF */
+      clearTimeout(hoverTimer);
+      open(card, true);
+    });
+
+    link.addEventListener('mouseenter', function () {
+      if (window.matchMedia && window.matchMedia('(hover: none)').matches) return;
+      clearTimeout(hoverTimer);
+      hoverTimer = setTimeout(function () { open(card, false); }, 260);
+    });
+
+    link.addEventListener('mouseleave', function () { clearTimeout(hoverTimer); });
+  });
+
+  /* Увод курсора с развёрнутого документа закрывает «незакреплённый» просмотр. */
+  panel.addEventListener('mouseleave', function () {
+    if (!pinned && !box.hidden) close();
+  });
+
+  box.addEventListener('click', function (e) {
+    if (e.target === box && !box.hidden) close();
+  });
+
+  closeBtn.addEventListener('click', close);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && !box.hidden) close();
+  });
+})();
+

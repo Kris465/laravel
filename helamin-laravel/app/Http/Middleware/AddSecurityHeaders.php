@@ -13,8 +13,10 @@ class AddSecurityHeaders
         $response = $next($request);
 
         // Livewire/Filament используют inline-скрипты, поэтому строгая политика
-        // применяется только к публичной части сайта.
-        if ($request->is('admin', 'admin/*', 'filament/*', 'livewire/*', 'storage/*', 'up')) {
+        // применяется только к публичной части сайта. Файлы медиатеки (/media/*)
+        // исключены: их встраивают в <iframe> для мини-превью PDF, а заголовки
+        // frame-ancestors 'none' и X-Frame-Options запретили бы это.
+        if ($request->is('admin', 'admin/*', 'filament/*', 'livewire/*', 'storage/*', 'media/*', 'up')) {
             return $response;
         }
 

@@ -38,7 +38,7 @@
     <footer class="footer">
         <div class="container footer__inner">
             <div class="footer__brand">
-                <span class="logo-main">HELAMIN</span>
+                <span class="logo-main logo-wordmark">HELAMIN</span>
                 <p class="footer__tagline">Средства для водоподготовки и&nbsp;защиты от&nbsp;коррозии</p>
             </div>
             <div class="footer__contacts">
@@ -55,6 +55,22 @@
             </div>
         </div>
     </footer>
+
+    {{-- Просмотрщик PDF на весь экран. Лежит в layout, потому что превью теперь
+         могут встречаться в тексте любой страницы. Скрыт до открытия, src
+         подставляет public/js/app.js. --}}
+    <div class="pdf-lightbox" id="pdfLightbox" hidden role="dialog" aria-modal="true" aria-label="Просмотр документа">
+        <div class="pdf-lightbox__bar">
+            <span class="pdf-lightbox__name" id="pdfLightboxName"></span>
+            <span class="pdf-lightbox__actions">
+                <a class="pdf-lightbox__download" id="pdfLightboxDownload" href="#" download>Скачать</a>
+                <button type="button" class="pdf-lightbox__close" id="pdfLightboxClose" aria-label="Закрыть">&times;</button>
+            </span>
+        </div>
+        <div class="pdf-lightbox__panel" id="pdfLightboxPanel">
+            <iframe class="pdf-lightbox__frame" id="pdfLightboxFrame" title="Просмотр PDF"></iframe>
+        </div>
+    </div>
 
     <script src="{{ asset('js/app.js') }}"></script>
     @stack('scripts')

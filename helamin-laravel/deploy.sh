@@ -23,6 +23,9 @@ php artisan route:clear
 echo ">>> Запуск миграций..."
 php artisan migrate --force
 
+echo ">>> Регистрация уже загруженных файлов в медиатеке..."
+php artisan media:sync
+
 echo ">>> Публикация ассетов Filament и ссылки на storage..."
 php artisan filament:assets
 php artisan storage:link

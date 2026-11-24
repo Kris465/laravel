@@ -11,7 +11,7 @@
         </div>
 
         <div class="hero__center">
-            <h1 class="hero__title hero__title--red">HELAMIN<span class="hero__reg">&reg;</span></h1>
+            <h1 class="hero__title hero__title--red logo-wordmark">HELAMIN<span class="hero__reg">&reg;</span></h1>
         </div>
 
         <div class="hero__right">
@@ -29,8 +29,6 @@
         <article class="content-area">
             {{ $page->renderedContent() }}
         </article>
-
-        @include('partials.page-media')
     </div>
 </section>
 @endif
