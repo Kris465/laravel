@@ -154,6 +154,28 @@ class PageTest extends TestCase
             ->assertSee('/storage/backgrounds/water%20tile.jpg', false);
     }
 
+    public function test_background_uses_media_route_when_registered(): void
+    {
+        $page = Page::query()->where('slug', '/')->firstOrFail();
+
+        $media = Media::create([
+            'page_id' => $page->id,
+            'disk' => 'public',
+            'path' => 'backgrounds/water tile.jpg',
+            'file_path' => 'backgrounds/water tile.jpg',
+            'collection' => 'background',
+        ]);
+
+        $page->update(['background' => 'backgrounds/water tile.jpg']);
+
+        // /media/{id} не зависит от симлинка public/storage и правил nginx.
+        $this->get('/news')
+            ->assertOk()
+            ->assertSee('has-site-background', false)
+            ->assertSee('/media/'.$media->id, false)
+            ->assertDontSee('/storage/backgrounds/water%20tile.jpg', false);
+    }
+
     public function test_background_is_not_applied_when_not_set(): void
     {
         $this->get('/news')->assertOk()->assertDontSee('has-site-background', false);
