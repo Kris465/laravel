@@ -18,7 +18,10 @@ return new class extends Migration
             // Неизменный якорь: по нему находятся старые ссылки в текстах,
             // галерея и список документов. Фактическое расположение файла
             // лежит в file_path (см. следующую миграцию) и может меняться.
-            $table->string('path')->unique();
+            // 191, а не 255: на старом MySQL/MariaDB лимит индекса 767 байт,
+            // utf8mb4 × 255 = 1020 не влезает (ошибка 1071). Реальных путей
+            // вида images/<ULID>.jpg хватает с большим запасом.
+            $table->string('path', 191)->unique();
             $table->string('collection', 32)->index(); // image | document | background
             $table->string('label')->nullable(); // человеческая подпись для менеджера
             $table->string('mime')->nullable();

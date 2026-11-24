@@ -12,7 +12,7 @@ return new class extends Migration
             // Текущий физический путь. NULL = файл всё ещё лежит по `path`.
             // Если хостинг переименовал файл, правится ТОЛЬКО это поле —
             // якорь `path` и все /media/{id} остаются прежними.
-            $table->string('file_path')->nullable()->after('path');
+            $table->string('file_path', 191)->nullable()->after('path');
         });
     }
 
