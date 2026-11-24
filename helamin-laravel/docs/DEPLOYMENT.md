@@ -7,16 +7,18 @@
 - MySQL (или SQLite для локальной разработки)
 - Apache с `mod_rewrite`; `DocumentRoot` указывает на `public/`
 
-На хостинге приложение живёт в `/home/helamin/helamin.ru/temp-laravel` —
-этот же путь указан в `helamin-ru-laravel.conf` и `htaccess-laravel-redirect`
-(оба лежат в корне репозитория, на уровень выше `helamin-laravel/`).
+На хостинге git-репозиторий лежит в `/home/helamin/helamin.ru`, а приложение —
+в `/home/helamin/helamin.ru/helamin-laravel`. Именно оттуда запускаются
+`artisan`, `composer` и `deploy.sh`. Путь `temp-laravel`, указанный в
+`helamin-ru-laravel.conf` и `htaccess-laravel-redirect`, устарел: веб-сервер
+обслуживает `helamin-laravel/public`.
 
 ## Шаги
 
 ### 1. Код и зависимости
 
 ```bash
-cd /home/helamin/helamin.ru/temp-laravel
+cd /home/helamin/helamin.ru/helamin-laravel
 git pull origin main
 composer install --no-dev --optimize-autoloader
 ```

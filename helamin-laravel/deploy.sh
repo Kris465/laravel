@@ -2,7 +2,7 @@
 # ============================================
 # Helamin Laravel — скрипт деплоя
 # Запускать из директории проекта на сервере:
-#   cd /home/helamin/helamin.ru/temp-laravel
+#   cd /home/helamin/helamin.ru/helamin-laravel
 #   bash deploy.sh
 # ============================================
 
@@ -26,9 +26,17 @@ php artisan migrate --force
 echo ">>> Регистрация уже загруженных файлов в медиатеке..."
 php artisan media:sync
 
-echo ">>> Публикация ассетов Filament и ссылки на storage..."
+echo ">>> Публикация ассетов Filament..."
 php artisan filament:assets
-php artisan storage:link
+
+# Симлинк на хостинге уже существует: storage:link вернул бы код 1,
+# а set -e оборвал бы деплой до кэшей и chmod. Проверяем заранее.
+if [ ! -L public/storage ]; then
+    echo ">>> Создание ссылки public/storage..."
+    php artisan storage:link
+else
+    echo ">>> Ссылка public/storage уже существует, пропускаем."
+fi
 
 echo ">>> Кеширование конфигурации..."
 php artisan config:cache

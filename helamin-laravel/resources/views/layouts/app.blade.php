@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Helamin')</title>
-    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml" sizes="any">
-    <link rel="alternate icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    {{-- Только SVG: favicon.ico в репозитории пустой (0 байт) и перебивал иконку.
+         ?v= по mtime сбрасывает агрессивный кэш favicon в браузере. --}}
+    <link rel="icon" href="{{ asset('favicon.svg') }}?v={{ filemtime(public_path('favicon.svg')) }}" type="image/svg+xml" sizes="any">
     <meta name="description" content="@yield('meta_description', 'HELAMIN — средства для водоподготовки и защиты от коррозии')">
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/media.css') }}">
+    {{-- Версия по mtime: иначе браузер/прокси держит старый CSS по ETag после деплоя. --}}
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}?v={{ filemtime(public_path('css/app.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/media.css') }}?v={{ filemtime(public_path('css/media.css')) }}">
     @stack('styles')
 </head>
 <body @class(['has-site-background' => filled($siteBackgroundUrl ?? null)]) @if(filled($siteBackgroundUrl ?? null)) style="--site-bg: url('{{ $siteBackgroundUrl }}');" @endif>
@@ -72,7 +74,7 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/app.js') }}"></script>
+    <script src="{{ asset('js/app.js') }}?v={{ filemtime(public_path('js/app.js')) }}"></script>
     @stack('scripts')
 </body>
 </html>
